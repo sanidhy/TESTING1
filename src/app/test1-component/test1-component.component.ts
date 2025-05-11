@@ -1,5 +1,5 @@
 // import { Component, OnInit } from '@angular/core';
-import { Component, AfterViewInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 
 
 @Component({
@@ -7,26 +7,28 @@ import { Component, AfterViewInit, ElementRef, ViewChild, Renderer2 } from '@ang
   templateUrl: './test1-component.component.html',
   styleUrls: ['./test1-component.component.css']
 })
-export class Test1ComponentComponent implements AfterViewInit {
-  @ViewChild('slide', { static: true }) slideRef!: ElementRef;
-  @ViewChild('nextBtn', { static: true }) nextBtnRef!: ElementRef;
-  @ViewChild('prevBtn', { static: true }) prevBtnRef!: ElementRef;
+export class Test1ComponentComponent {
+ @ViewChild('nav', { static: true }) nav!: ElementRef;
+  @ViewChild('searchInput', { static: true }) searchInput!: ElementRef;
+  @ViewChild('menuToggle', { static: true }) menuToggle!: ElementRef;
 
   constructor(private renderer: Renderer2) {}
 
-  ngAfterViewInit(): void {
-    this.renderer.listen(this.nextBtnRef.nativeElement, 'click', () => {
-      const items = this.slideRef.nativeElement.querySelectorAll('.item');
-      if (items.length) {
-        this.slideRef.nativeElement.appendChild(items[0]);
-      }
-    });
+  toggleSearch() {
+    const navEl = this.nav.nativeElement;
+    const searchEl = this.searchInput.nativeElement;
 
-    this.renderer.listen(this.prevBtnRef.nativeElement, 'click', () => {
-      const items = this.slideRef.nativeElement.querySelectorAll('.item');
-      if (items.length) {
-        this.slideRef.nativeElement.prepend(items[items.length - 1]);
-      }
-    });
+    if (navEl.classList.contains('search')) {
+      this.renderer.removeClass(navEl, 'search');
+      this.renderer.addClass(navEl, 'no-search');
+      this.renderer.removeClass(searchEl, 'search-active');
+    } else {
+      this.renderer.addClass(navEl, 'search');
+      this.renderer.removeClass(navEl, 'no-search');
+      this.renderer.addClass(searchEl, 'search-active');
+    }
   }
+
+ 
+
 }
